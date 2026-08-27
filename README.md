@@ -32,6 +32,11 @@ diámetros de alambre se evalúan en incrementos de 0.5 mm. El intervalo preferi
 es de 25% a 40% de deflexión; cuando corresponde, la aplicación muestra
 alternativas excepcionales hasta un máximo absoluto de 60%.
 
+Además, cuando existe al menos una opción preferida, se muestra por separado el
+diámetro inmediatamente anterior —0.5 mm menor que la opción preferida mínima—
+como comparación económica. Si requiere más de 60% de deflexión, queda marcado
+explícitamente como referencia y no como recomendación técnica.
+
 ## Uso local
 
 Requiere Python 3.12.

@@ -23,7 +23,7 @@ EPSILON = 1e-9
 
 
 Severity = Literal["error", "warning"]
-Classification = Literal["Preferida", "Excepcional"]
+Classification = Literal["Preferida", "Excepcional", "Comparativa económica"]
 
 
 @dataclass(frozen=True)
@@ -77,6 +77,7 @@ class RecommendationSet:
     preferred: tuple[Recommendation, ...]
     exceptional: tuple[Recommendation, ...]
     displayed: tuple[Recommendation, ...]
+    economic_comparison: Recommendation | None
     expansion_triggered: bool
 
     @property
@@ -264,7 +265,12 @@ def derive_geometry(inputs: SpringInputs) -> DerivedGeometry:
     )
 
 
-def _candidate(inputs: SpringInputs, wire_diameter_mm: float) -> Recommendation | None:
+def _candidate(
+    inputs: SpringInputs,
+    wire_diameter_mm: float,
+    *,
+    include_out_of_range: bool = False,
+) -> Recommendation | None:
     resulting_inside = inputs.outside_diameter_mm - 2.0 * wire_diameter_mm
     solid_height = inputs.total_coils * wire_diameter_mm
     available_deflection = inputs.free_height_mm - solid_height
@@ -288,6 +294,8 @@ def _candidate(inputs: SpringInputs, wire_diameter_mm: float) -> Recommendation 
         classification: Classification = "Preferida"
     elif PREFERRED_MAX_PERCENT + EPSILON < deflection_percent <= EXCEPTIONAL_MAX_PERCENT + EPSILON:
         classification = "Excepcional"
+    elif include_out_of_range:
+        classification = "Comparativa económica"
     else:
         return None
 
@@ -350,13 +358,35 @@ def generate_recommendations(
         or abs(preferred[0].wire_change_mm) > DIAMETER_CHANGE_TRIGGER_MM + EPSILON
     )
 
+    economic_comparison = None
+    if preferred:
+        minimum_preferred_wire = min(item.wire_diameter_mm for item in preferred)
+        previous_wire = minimum_preferred_wire - WIRE_INCREMENT_MM
+        if previous_wire > 0:
+            economic_comparison = _candidate(
+                inputs,
+                previous_wire,
+                include_out_of_range=True,
+            )
+
     if not preferred:
         displayed = exceptional[:max_results]
     elif expansion_triggered:
         preferred_slots = min(3, max_results)
         selected_preferred = preferred[:preferred_slots]
         remaining_slots = max_results - len(selected_preferred)
-        displayed = selected_preferred + exceptional[:remaining_slots]
+        economic_wire = (
+            economic_comparison.wire_diameter_mm
+            if economic_comparison is not None
+            else None
+        )
+        other_exceptional = [
+            item
+            for item in exceptional
+            if economic_wire is None
+            or abs(item.wire_diameter_mm - economic_wire) > EPSILON
+        ]
+        displayed = selected_preferred + other_exceptional[:remaining_slots]
     else:
         displayed = preferred[:max_results]
 
@@ -364,5 +394,6 @@ def generate_recommendations(
         preferred=tuple(preferred),
         exceptional=tuple(exceptional if expansion_triggered else ()),
         displayed=tuple(displayed),
+        economic_comparison=economic_comparison,
         expansion_triggered=expansion_triggered,
     )

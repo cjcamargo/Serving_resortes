@@ -18,4 +18,7 @@ def test_default_example_produces_recommendations() -> None:
     assert not app.exception
     assert any("Resumen del resorte actual" in heading.value for heading in app.subheader)
     assert len(app.metric) >= 7
-    assert len(app.dataframe) >= 1
+    assert len(app.dataframe) >= 2
+    assert any(
+        "Alternativa económica" in heading.value for heading in app.markdown
+    )

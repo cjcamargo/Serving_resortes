@@ -69,6 +69,19 @@ def test_exceptional_options_are_hidden_when_preferred_change_is_small() -> None
     assert all(item.classification == "Preferida" for item in result.displayed)
 
 
+def test_economic_comparison_is_one_half_millimetre_below_minimum_preferred() -> None:
+    inputs = excel_example(target_pressure_psi=300.0)
+    result = generate_recommendations(inputs)
+
+    minimum_preferred = min(item.wire_diameter_mm for item in result.preferred)
+    assert result.economic_comparison is not None
+    assert result.economic_comparison.wire_diameter_mm == pytest.approx(
+        minimum_preferred - 0.5
+    )
+    assert result.economic_comparison.classification == "Excepcional"
+    assert result.economic_comparison.deflection_percent > 40.0
+
+
 def test_exceptional_options_never_exceed_sixty_percent() -> None:
     inputs = excel_example(target_pressure_psi=100.0)
     result = generate_recommendations(inputs)

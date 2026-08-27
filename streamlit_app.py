@@ -263,6 +263,40 @@ if submitted:
                         use_container_width=True,
                     )
 
+                economic = result.economic_comparison
+                if economic is not None:
+                    st.markdown("#### Alternativa económica · diámetro anterior")
+                    if economic.deflection_percent <= 60.0:
+                        economic_note = (
+                            "Está dentro del límite máximo de 60% y puede evaluarse "
+                            "como una alternativa de menor costo."
+                        )
+                    else:
+                        economic_note = (
+                            "Supera el límite máximo de 60%; se muestra únicamente "
+                            "como referencia económica y no como recomendación técnica."
+                        )
+                    st.markdown(
+                        f"""
+                        <div class="result-card exceptional">
+                          <h3>{economic.wire_diameter_mm:.1f} mm de diámetro</h3>
+                          <div>
+                            Es 0.5 mm menor que la opción preferida mínima y requiere
+                            <strong>{economic.required_deflection_mm:.2f} mm</strong>,
+                            equivalentes al
+                            <strong>{economic.deflection_percent:.2f}%</strong> de la
+                            deflexión disponible. {economic_note}
+                          </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+                    st.dataframe(
+                        recommendation_rows((economic,)),
+                        hide_index=True,
+                        use_container_width=True,
+                    )
+
             with st.expander("Fórmulas utilizadas"):
                 st.code(
                     "K = (d⁴ × G) / (8 × D_exterior³ × N_activas)\n"
