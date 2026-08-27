@@ -137,17 +137,6 @@ st.markdown(
         max-width: 540px;
         margin: 0;
     }
-    .hero-chips { display: flex; gap: .55rem; flex-wrap: wrap; margin-top: 1.35rem; }
-    .hero-chips span {
-        color: #e8f7fc;
-        border: 1px solid rgba(157,219,240,.35);
-        background: rgba(7,43,61,.68);
-        backdrop-filter: blur(8px);
-        border-radius: 999px;
-        padding: .45rem .72rem;
-        font-size: .78rem;
-        font-weight: 650;
-    }
     .process-strip {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -229,16 +218,11 @@ st.markdown(
     """
     <section class="industrial-hero">
       <span class="hero-eyebrow">INGENIERÍA DE VÁLVULAS · CÁLCULO DE RESORTES</span>
-      <h2>Convierte mediciones de taller en decisiones de diseño.</h2>
+      <h2>Calculadora de resortes bajo estándares de diseño industrial.</h2>
       <p>
         Evalúa la rigidez, calcula la presión de apertura y compara diámetros
         de alambre con una metodología probada en operación.
       </p>
-      <div class="hero-chips">
-        <span>Fórmula validada</span>
-        <span>Geometría en milímetros</span>
-        <span>Resultados en PSI</span>
-      </div>
     </section>
     <section class="process-strip">
       <div class="process-item"><b>01</b><div><strong>Mide</strong><small>Geometría real del resorte</small></div></div>
