@@ -5,6 +5,9 @@ seguridad. A partir de las medidas del resorte actual y una presión deseada,
 calcula alternativas de diámetro de alambre y la deflexión necesaria para cada
 una.
 
+La interfaz utiliza una identidad visual industrial propia y un render técnico
+original de una válvula de seguridad en corte con su resorte visible.
+
 ## Modelo de cálculo
 
 La aplicación reproduce el modelo de cálculo que Serving S.A.S. utiliza en su

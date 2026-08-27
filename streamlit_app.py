@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import base64
+from pathlib import Path
+
 import streamlit as st
 
 from spring_calculator import (
@@ -19,58 +22,235 @@ st.set_page_config(
     layout="wide",
 )
 
+HERO_PATH = Path(__file__).parent / "assets" / "serving-valve-spring-hero.png"
+HERO_IMAGE = base64.b64encode(HERO_PATH.read_bytes()).decode("ascii")
+
 
 st.markdown(
     """
     <style>
     :root {
-        --serving-blue: #164e78;
-        --serving-blue-soft: #e8f2f8;
-        --serving-yellow: #fff3a6;
-        --serving-orange: #f5b47b;
-        --serving-ink: #173042;
+        --serving-navy: #071b29;
+        --serving-blue: #0b5d83;
+        --serving-cyan: #13a8d8;
+        --serving-blue-soft: #eaf5fa;
+        --serving-yellow: #fff2a8;
+        --serving-gold: #f2b134;
+        --serving-orange: #ed8e45;
+        --serving-ink: #102b3b;
+        --serving-muted: #5c7380;
     }
-    .stApp { color: var(--serving-ink); }
-    .block-container { max-width: 1180px; padding-top: 2.2rem; }
+    .stApp {
+        color: var(--serving-ink);
+        background:
+            radial-gradient(circle at 92% 3%, rgba(19,168,216,.10), transparent 22rem),
+            linear-gradient(180deg, #f9fbfc 0%, #f2f7f9 100%);
+    }
+    .block-container { max-width: 1240px; padding-top: 1.4rem; padding-bottom: 3rem; }
+    div[data-testid="stHeadingWithActionElements"] h1 {
+        color: var(--serving-navy);
+        letter-spacing: -.035em;
+        font-weight: 800;
+        margin-bottom: 0;
+    }
+    div[data-testid="stCaptionContainer"] { color: var(--serving-muted); }
+    div[data-testid="stForm"] {
+        background: rgba(255,255,255,.94);
+        border: 1px solid #d6e3e9;
+        border-radius: 22px;
+        padding: 1.5rem 1.65rem 1.65rem;
+        box-shadow: 0 18px 50px rgba(7,27,41,.08);
+    }
     div[data-testid="stNumberInput"] input {
         background: var(--serving-yellow);
-        border-color: #d8bf37;
+        border-color: #e2ca53;
+        color: #1a2d35;
+        font-weight: 650;
     }
-    div[data-testid="stHeadingWithActionElements"] h1 {
-        color: var(--serving-blue);
+    div[data-testid="stNumberInput"] input:focus {
+        border-color: var(--serving-gold);
+        box-shadow: 0 0 0 1px var(--serving-gold);
+    }
+    div[data-testid="stFormSubmitButton"] button {
+        min-height: 3rem;
+        border: 0;
+        border-radius: 12px;
+        background: linear-gradient(100deg, var(--serving-navy), var(--serving-blue));
+        box-shadow: 0 9px 22px rgba(11,93,131,.22);
+        font-weight: 750;
+        letter-spacing: .015em;
+    }
+    div[data-testid="stFormSubmitButton"] button:hover {
+        background: linear-gradient(100deg, #0b2c40, #0b74a3);
+        transform: translateY(-1px);
+    }
+    div[data-testid="stMetric"] {
+        background: linear-gradient(145deg, #ffffff, #edf5f8);
+        border: 1px solid #d6e4ea;
+        border-top: 4px solid var(--serving-cyan);
+        border-radius: 15px;
+        padding: .85rem 1rem;
+        box-shadow: 0 8px 24px rgba(7,27,41,.06);
+    }
+    div[data-testid="stMetricValue"] {
+        color: var(--serving-navy);
+        font-weight: 780;
+    }
+    .industrial-hero {
+        min-height: 390px;
+        margin: .6rem 0 1rem;
+        padding: 3.1rem 3.2rem;
+        border-radius: 26px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-image:
+            linear-gradient(90deg, rgba(3,17,27,.98) 0%, rgba(3,20,32,.90) 37%, rgba(3,20,32,.20) 68%, rgba(3,20,32,.03) 100%),
+            url("data:image/png;base64,HERO_IMAGE_PLACEHOLDER");
+        background-size: cover;
+        background-position: center;
+        box-shadow: 0 24px 65px rgba(3,20,32,.27);
+        overflow: hidden;
+    }
+    .hero-eyebrow {
+        width: fit-content;
+        color: #071b29;
+        background: var(--serving-gold);
+        border-radius: 999px;
+        padding: .42rem .8rem;
+        font-size: .72rem;
+        font-weight: 850;
+        letter-spacing: .11em;
+    }
+    .industrial-hero h2 {
+        color: white;
+        font-size: clamp(2rem, 4vw, 3.55rem);
+        max-width: 680px;
+        line-height: 1.02;
+        letter-spacing: -.04em;
+        margin: 1rem 0 .8rem;
+    }
+    .industrial-hero p {
+        color: #cae0e9;
+        font-size: 1.06rem;
+        line-height: 1.55;
+        max-width: 540px;
+        margin: 0;
+    }
+    .hero-chips { display: flex; gap: .55rem; flex-wrap: wrap; margin-top: 1.35rem; }
+    .hero-chips span {
+        color: #e8f7fc;
+        border: 1px solid rgba(157,219,240,.35);
+        background: rgba(7,43,61,.68);
+        backdrop-filter: blur(8px);
+        border-radius: 999px;
+        padding: .45rem .72rem;
+        font-size: .78rem;
+        font-weight: 650;
+    }
+    .process-strip {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: .8rem;
+        margin: 1rem 0 1.5rem;
+    }
+    .process-item {
+        background: #ffffff;
+        border: 1px solid #d7e4ea;
+        border-radius: 14px;
+        padding: .85rem 1rem;
+        display: flex;
+        gap: .8rem;
+        align-items: center;
+        box-shadow: 0 7px 18px rgba(7,27,41,.05);
+    }
+    .process-item b {
+        color: var(--serving-cyan);
+        font-size: 1.45rem;
+        line-height: 1;
+    }
+    .process-item strong { display: block; color: var(--serving-navy); }
+    .process-item small { color: var(--serving-muted); }
+    .intro-copy {
+        color: var(--serving-muted);
+        font-size: 1rem;
+        margin: .25rem 0 1.1rem;
     }
     .result-card {
-        border-radius: 12px;
-        padding: 1rem 1.2rem;
+        border-radius: 18px;
+        padding: 1.15rem 1.35rem;
         margin: .7rem 0 1rem 0;
+        box-shadow: 0 12px 30px rgba(7,27,41,.08);
     }
     .result-card.preferred {
-        background: var(--serving-blue-soft);
+        background: linear-gradient(135deg, #e9f7fc, #dceef5);
         border: 2px solid var(--serving-blue);
     }
     .result-card.exceptional {
-        background: #fff1e4;
+        background: linear-gradient(135deg, #fff6e9, #ffead7);
         border: 2px solid var(--serving-orange);
     }
-    .result-card h3 { margin: 0 0 .35rem 0; }
+    .result-card h3 { margin: 0 0 .35rem 0; color: var(--serving-navy); }
     .safety-note {
-        background: #f4f6f8;
-        border-left: 5px solid #697b88;
-        padding: .8rem 1rem;
-        margin-top: 1.4rem;
+        color: #dcecf2;
+        background: linear-gradient(115deg, #071b29, #0c354a);
+        border-left: 6px solid var(--serving-gold);
+        border-radius: 12px;
+        padding: 1rem 1.15rem;
+        margin-top: 1.6rem;
         font-size: .93rem;
     }
+    .safety-note strong { color: #ffd66d; }
+    div[data-testid="stDataFrame"] {
+        border: 1px solid #d5e2e8;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(7,27,41,.05);
+    }
+    @media (max-width: 760px) {
+        .industrial-hero {
+            min-height: 430px;
+            padding: 2rem 1.3rem;
+            background-position: 62% center;
+        }
+        .industrial-hero h2 { font-size: 2.25rem; max-width: 90%; }
+        .industrial-hero p { max-width: 78%; }
+        .process-strip { grid-template-columns: 1fr; }
+    }
     </style>
-    """,
+    """.replace("HERO_IMAGE_PLACEHOLDER", HERO_IMAGE),
     unsafe_allow_html=True,
 )
 
 st.title("Serving S.A.S.")
-st.caption("Calculadora de resortes para válvulas de seguridad")
+st.caption("Ingeniería y mantenimiento de válvulas de seguridad")
 
-st.write(
-    "Ingrese las medidas del resorte actual y la presión deseada. "
-    "Los campos amarillos corresponden a datos medidos por el técnico."
+st.markdown(
+    """
+    <section class="industrial-hero">
+      <span class="hero-eyebrow">INGENIERÍA DE VÁLVULAS · CÁLCULO DE RESORTES</span>
+      <h2>Convierte mediciones de taller en decisiones de diseño.</h2>
+      <p>
+        Evalúa la rigidez, calcula la presión de apertura y compara diámetros
+        de alambre con una metodología probada en operación.
+      </p>
+      <div class="hero-chips">
+        <span>Fórmula validada</span>
+        <span>Geometría en milímetros</span>
+        <span>Resultados en PSI</span>
+      </div>
+    </section>
+    <section class="process-strip">
+      <div class="process-item"><b>01</b><div><strong>Mide</strong><small>Geometría real del resorte</small></div></div>
+      <div class="process-item"><b>02</b><div><strong>Calcula</strong><small>Rigidez y presión de apertura</small></div></div>
+      <div class="process-item"><b>03</b><div><strong>Compara</strong><small>Opciones técnicas y económicas</small></div></div>
+    </section>
+    <p class="intro-copy">
+      Ingrese las medidas del resorte actual y la presión deseada. Los campos
+      amarillos corresponden a datos medidos directamente por el técnico.
+    </p>
+    """,
+    unsafe_allow_html=True,
 )
 
 
