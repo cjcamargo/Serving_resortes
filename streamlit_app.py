@@ -268,10 +268,10 @@ def spring_diagram_svgs(
 ) -> tuple[str, str]:
     """Construye las vistas frontal y superior con las medidas del resorte."""
 
-    center_x = 230.0
-    top_y = 70.0
-    drawing_height = 285.0
-    radius = 96.0
+    center_x = 215.0
+    top_y = 95.0
+    drawing_height = 190.0
+    radius = 82.0
     visible_turns = max(2.0, min(float(total_coils), 12.0))
     wire_stroke = max(
         7.0,
@@ -286,11 +286,11 @@ def spring_diagram_svgs(
     spring_points = " ".join(points)
 
     plan_center_x = 230.0
-    plan_center_y = 205.0
-    outside_radius = 98.0
+    plan_center_y = 185.0
+    outside_radius = 82.0
     inside_radius = max(
         8.0,
-        min(90.0, outside_radius * inside_diameter_mm / max(outside_diameter_mm, 0.1)),
+        min(76.0, outside_radius * inside_diameter_mm / max(outside_diameter_mm, 0.1)),
     )
     wire_mid_radius = (outside_radius + inside_radius) / 2
     plan_wire_stroke = max(6.0, outside_radius - inside_radius)
@@ -323,65 +323,66 @@ def spring_diagram_svgs(
     """
 
     front_svg = f"""
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 430" role="img" aria-labelledby="spring-front-title spring-front-desc">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 350" role="img" aria-labelledby="spring-front-title spring-front-desc">
         <title id="spring-front-title">Vista frontal del resorte</title>
         <desc id="spring-front-desc">Altura libre, diámetro exterior, separación y número de espiras.</desc>
-        <rect x="2" y="2" width="456" height="426" rx="18" fill="#071b29" stroke="#28566a"/>
+        <rect x="2" y="2" width="456" height="346" rx="18" fill="#071b29" stroke="#28566a"/>
         {shared_defs}
         <text x="24" y="28" class="visual-title">Vista frontal</text>
         <text x="24" y="48" class="visual-subtitle">Altura, espiras y separación</text>
 
-        <line x1="230" y1="62" x2="230" y2="365" class="center-line"/>
+        <line x1="215" y1="88" x2="215" y2="292" class="center-line"/>
         <polyline points="{spring_points}" fill="none" stroke="#020c12" stroke-width="{wire_stroke + 5:.1f}" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>
         <polyline points="{spring_points}" fill="none" stroke="url(#spring-metal)" stroke-width="{wire_stroke:.1f}" stroke-linecap="round" stroke-linejoin="round" filter="url(#spring-shadow)"/>
 
-        <line x1="{center_x - radius:.1f}" y1="55" x2="{center_x - radius:.1f}" y2="73" class="extension"/>
-        <line x1="{center_x + radius:.1f}" y1="55" x2="{center_x + radius:.1f}" y2="73" class="extension"/>
-        <line x1="{center_x - radius:.1f}" y1="55" x2="{center_x + radius:.1f}" y2="55" class="dimension" marker-start="url(#dimension-arrow)" marker-end="url(#dimension-arrow)"/>
-        <text x="230" y="61" text-anchor="middle" class="dimension-label">Dext = {outside_diameter_mm:.1f} mm</text>
+        <line x1="{center_x - radius:.1f}" y1="78" x2="{center_x - radius:.1f}" y2="96" class="extension"/>
+        <line x1="{center_x + radius:.1f}" y1="78" x2="{center_x + radius:.1f}" y2="96" class="extension"/>
+        <line x1="{center_x - radius:.1f}" y1="78" x2="{center_x + radius:.1f}" y2="78" class="dimension" marker-start="url(#dimension-arrow)" marker-end="url(#dimension-arrow)"/>
+        <text x="215" y="68" text-anchor="middle" class="dimension-label">Diámetro exterior = {outside_diameter_mm:.1f} mm</text>
 
-        <line x1="125" y1="70" x2="65" y2="70" class="extension"/>
-        <line x1="125" y1="355" x2="65" y2="355" class="extension"/>
-        <line x1="72" y1="70" x2="72" y2="355" class="dimension" marker-start="url(#dimension-arrow)" marker-end="url(#dimension-arrow)"/>
-        <text x="51" y="213" text-anchor="middle" transform="rotate(-90 51 213)" class="dimension-label">H₀ = {free_height_mm:.1f} mm</text>
+        <line x1="125" y1="95" x2="61" y2="95" class="extension"/>
+        <line x1="125" y1="285" x2="61" y2="285" class="extension"/>
+        <line x1="68" y1="95" x2="68" y2="285" class="dimension" marker-start="url(#dimension-arrow)" marker-end="url(#dimension-arrow)"/>
+        <text x="47" y="190" text-anchor="middle" transform="rotate(-90 47 190)" class="dimension-label">Altura libre = {free_height_mm:.1f} mm</text>
 
-        <line x1="337" y1="137" x2="393" y2="137" class="extension"/>
-        <line x1="337" y1="169" x2="393" y2="169" class="extension"/>
-        <line x1="385" y1="137" x2="385" y2="169" class="dimension" marker-start="url(#dimension-arrow)" marker-end="url(#dimension-arrow)"/>
-        <text x="400" y="157" class="dimension-label">s = {average_gap_mm:.1f} mm</text>
+        <line x1="300" y1="142" x2="342" y2="142" class="extension"/>
+        <line x1="300" y1="163" x2="342" y2="163" class="extension"/>
+        <line x1="336" y1="142" x2="336" y2="163" class="dimension" marker-start="url(#dimension-arrow)" marker-end="url(#dimension-arrow)"/>
+        <text x="350" y="149" class="muted-label">Separación libre (s)</text>
+        <text x="350" y="166" class="dimension-label">{average_gap_mm:.1f} mm</text>
 
-        <text x="230" y="390" text-anchor="middle" class="technical-label">Nt = {total_coils:g} espiras · Na = {active_coils:g} activas</text>
-        <text x="230" y="411" text-anchor="middle" class="muted-label">Representación ilustrativa · no está a escala</text>
+        <text x="215" y="318" text-anchor="middle" class="technical-label">Espiras totales: {total_coils:g} · Espiras activas: {active_coils:g}</text>
       </svg>
     """
 
     top_svg = f"""
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 430" role="img" aria-labelledby="spring-top-title spring-top-desc">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 350" role="img" aria-labelledby="spring-top-title spring-top-desc">
         <title id="spring-top-title">Vista superior del resorte</title>
         <desc id="spring-top-desc">Diámetros exterior, interior y del alambre.</desc>
-        <rect x="2" y="2" width="456" height="426" rx="18" fill="#071b29" stroke="#28566a"/>
+        <rect x="2" y="2" width="456" height="346" rx="18" fill="#071b29" stroke="#28566a"/>
         {shared_defs}
         <text x="24" y="28" class="visual-title">Vista superior</text>
         <text x="24" y="48" class="visual-subtitle">Diámetros exterior, interior y del alambre</text>
 
-        <line x1="110" y1="205" x2="350" y2="205" class="center-line"/>
-        <line x1="230" y1="85" x2="230" y2="325" class="center-line"/>
-        <circle cx="230" cy="205" r="{wire_mid_radius:.1f}" fill="none" stroke="#020c12" stroke-width="{plan_wire_stroke + 5:.1f}" opacity=".65"/>
-        <circle cx="230" cy="205" r="{wire_mid_radius:.1f}" fill="none" stroke="url(#spring-metal)" stroke-width="{plan_wire_stroke:.1f}"/>
+        <line x1="125" y1="185" x2="335" y2="185" class="center-line"/>
+        <line x1="230" y1="80" x2="230" y2="290" class="center-line"/>
+        <circle cx="230" cy="185" r="{wire_mid_radius:.1f}" fill="none" stroke="#020c12" stroke-width="{plan_wire_stroke + 5:.1f}" opacity=".65"/>
+        <circle cx="230" cy="185" r="{wire_mid_radius:.1f}" fill="none" stroke="url(#spring-metal)" stroke-width="{plan_wire_stroke:.1f}"/>
 
-        <line x1="132" y1="82" x2="132" y2="112" class="extension"/>
-        <line x1="328" y1="82" x2="328" y2="112" class="extension"/>
-        <line x1="132" y1="92" x2="328" y2="92" class="dimension" marker-start="url(#dimension-arrow)" marker-end="url(#dimension-arrow)"/>
-        <text x="230" y="76" text-anchor="middle" class="dimension-label">Dext = {outside_diameter_mm:.1f} mm</text>
+        <line x1="148" y1="73" x2="148" y2="103" class="extension"/>
+        <line x1="312" y1="73" x2="312" y2="103" class="extension"/>
+        <line x1="148" y1="83" x2="312" y2="83" class="dimension" marker-start="url(#dimension-arrow)" marker-end="url(#dimension-arrow)"/>
+        <text x="230" y="69" text-anchor="middle" class="dimension-label">Diámetro exterior = {outside_diameter_mm:.1f} mm</text>
 
-        <line x1="{plan_center_x - inside_radius:.1f}" y1="205" x2="{plan_center_x + inside_radius:.1f}" y2="205" class="dimension" marker-start="url(#dimension-arrow)" marker-end="url(#dimension-arrow)"/>
-        <rect x="175" y="212" width="110" height="22" rx="5" fill="#0b3449" opacity=".92"/>
-        <text x="230" y="228" text-anchor="middle" class="dimension-label">Dint = {inside_diameter_mm:.1f} mm</text>
+        <line x1="{plan_center_x - inside_radius:.1f}" y1="185" x2="{plan_center_x + inside_radius:.1f}" y2="185" class="dimension" marker-start="url(#dimension-arrow)" marker-end="url(#dimension-arrow)"/>
+        <rect x="174" y="197" width="112" height="39" rx="6" fill="#0b3449" opacity=".96"/>
+        <text x="230" y="212" text-anchor="middle" class="muted-label">Diámetro interior</text>
+        <text x="230" y="229" text-anchor="middle" class="dimension-label">{inside_diameter_mm:.1f} mm</text>
 
-        <line x1="{plan_center_x + inside_radius:.1f}" y1="315" x2="{plan_center_x + outside_radius:.1f}" y2="315" class="dimension" marker-start="url(#dimension-arrow)" marker-end="url(#dimension-arrow)"/>
-        <text x="230" y="345" text-anchor="middle" class="dimension-label">d = {wire_diameter_mm:.1f} mm</text>
-        <text x="230" y="390" text-anchor="middle" class="technical-label">Dext − Dint = {outside_diameter_mm - inside_diameter_mm:.1f} mm</text>
-        <text x="230" y="411" text-anchor="middle" class="muted-label">Representación ilustrativa · no está a escala</text>
+        <line x1="{plan_center_x + inside_radius * 0.707:.1f}" y1="{plan_center_y + inside_radius * 0.707:.1f}" x2="{plan_center_x + outside_radius * 0.707:.1f}" y2="{plan_center_y + outside_radius * 0.707:.1f}" class="dimension" marker-start="url(#dimension-arrow)" marker-end="url(#dimension-arrow)"/>
+        <line x1="{plan_center_x + outside_radius * 0.707:.1f}" y1="{plan_center_y + outside_radius * 0.707:.1f}" x2="330" y2="275" class="extension"/>
+        <text x="330" y="293" text-anchor="middle" class="muted-label">Diámetro del alambre (d)</text>
+        <text x="330" y="311" text-anchor="middle" class="dimension-label">{wire_diameter_mm:.1f} mm</text>
       </svg>
     """
     return front_svg.strip(), top_svg.strip()
@@ -439,8 +440,9 @@ with st.form("spring_form"):
         free_height_mm=free_height,
     )
     diagram_col_1, diagram_col_2 = st.columns(2)
-    diagram_col_1.image(front_svg, width="stretch")
-    diagram_col_2.image(top_svg, width="stretch")
+    diagram_col_1.image(front_svg, width=500)
+    diagram_col_2.image(top_svg, width=500)
+    st.caption("Esquema ilustrativo para identificar las medidas; no está a escala.")
 
     st.subheader("Datos de la válvula y presión objetivo")
     valve_col_1, valve_col_2 = st.columns(2)
